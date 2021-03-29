@@ -150,6 +150,12 @@ namespace BerrasBio1._0.Services
             return allMovies;
         }
 
+        public List<Movie> GetMoviesByAmount(int amount)
+        {
+            List<Movie> movieList = _db.Movies.Take(amount).ToList();
+            return movieList;
+        }
+
         public void SeedFromSqlFile()
         {
             using (_db)

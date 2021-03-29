@@ -1,0 +1,46 @@
+﻿@model BerrasBio1._0.Models.ViewModels.BuyTicketVM
+
+@{
+    ViewData["Title"] = "BuyTicket";
+}
+<div class="buy-ticket">
+  <div class="buy-ticket-form">
+    <form asp-action="BuyTicket" name="buyTicket">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <div class="form-group">
+        <label asp-for="FirstName" class="control-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="LastName" class="control-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+      </div>
+      @*<div class="form-group">
+        <label asp-for="ShowingId" class="control-label">Start time</label>
+        <select asp-for="ShowingId" class="form-control" asp-items="ViewBag.ShowingId"></select>
+      </div>*@
+      <input asp-for="ShowingId" value="@ViewBag.ShowingId" class="display-none"/>
+      <div class="form-group">
+        <label asp-for="AmountOfTickets" class="control-label"></label>
+        <input asp-for="AmountOfTickets" class="form-control" />
+        <span asp-validation-for="AmountOfTickets" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <input type="submit" value="Buy" class="btn-primary" />
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <a asp-action="Index">Back to List</a>
+  </div>
+  </div>
+
+

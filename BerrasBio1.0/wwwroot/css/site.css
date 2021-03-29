@@ -1,75 +1,360 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿:root {
+  --clr-background: black;
+  --clr-cinema-red: #9e0404;
+  --clr-main-text: white;
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+  --nav-size: 200px;
 }
-
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
 }
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+button:focus {
+  outline: none;
 }
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
+button {
+  color: white;
 }
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+ul {
+  list-style: none;
 }
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+a, a:hover, a:visited, a:active {
+  text-decoration: none;
+  color: var(--clr-main-text);
 }
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+html, body {
+  height: 100vh;
+  width: 100vh;
+  color: white;
+  font-family: 'Lato', sans-serif;
 }
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  background-color: var(--clr-background);
 }
-.footer {
+.main {
   position: absolute;
-  bottom: 0;
+  padding-top: 58px;
+  top:0;
+  left:0;
   width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+  height: 100%;
 }
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+header {
+  position: fixed;
+  height: 58px;
+  width: 100%;
+  background-color: var(--clr-cinema-red);
+  display: flex; 
+  z-index: 99;
+}
+.navigation-toggle-container {
+  height: 58px;
+  width: 58px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+
+header .logo-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+  header .logo-text {
+    font-family: 'Chango', cursive;
+    color: white;
+  }
+
+.navigation {
+  position: fixed;
+  top: 58px;
+  left: calc(-1 * var(--nav-size));
+  height: calc(100% - 58px);
+  width: 200px;
+  background-color: var(--clr-cinema-red);
+  color: white;
+  padding: 20px;
+  transition: transform .5s;
+  transition: -webkit-transform .5s ease;
+  transition: transform .5s ease;
+  z-index: 99;
+}
+
+.nav-active {
+  -webkit-transform: translateX(var(--nav-size));
+  -ms-transform: translateX(var(--nav-size));
+  transform: translateX(var(--nav-size));
+}
+
 
 .movie-poster-small {
-  width: 60px;
+  width: 100px;
 }
+.movie-details {
+  height: 100%;
+  width: 100%;
+  padding-top: 58px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.movie-details-inner {
+  width: 40%;
+  display: flex;
+}
+.movie-details-nav {
+  width: 40%;
+  height: 46px;
+}
+.movie-details-nav-list {
+  height: 100%;
+  max-width: 275px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.movie-details-nav-item {
+  font-size: 20px;
+}
+.movie-details-nav-item:hover span {
+  cursor:pointer;
+}
+
+.active {
+  border-bottom: solid red 3px;
+}
+.movie-details-poster-container {
+  max-width: 280px;
+}
+
+.movie-details-poster-img {
+  width: 100%;
+}
+.movie-details-info {
+  margin-left: 20px;
+
+}
+.movie-detail-info-genre:not(:last-child):after {
+  content: ' | ';
+}
+
+.movie-detail-info-plot {
+  margin-top: 20px;
+}
+.movie-detail-info-crew{
+  margin-top: 20px;
+}
+
+
+.movie-details-bg-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  z-index: -9;
+}
+.movie-details-bg {
+  position: absolute;
+  height: 140%;
+  left: -10%;
+  top: 0;
+  filter: blur(3px) brightness(5%);
+  -webkit-filter: blur(3px) brightness(5%);
+  -moz-filter: blur(3px) brightness(5%);
+  z-index: -9
+}
+
+.showings, .movie-showings, .buy-ticket, .auditoriums {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.showings, .movie-showings h1 {
+  margin: 10px;
+}
+.showings-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+  .showings-table thead tr {
+    background-color: var(--clr-cinema-red);
+    color: #ffffff;
+    text-align: left;
+  }
+
+  .showings-table th,
+  .showings-table td {
+    padding: 12px 15px;
+  }
+  .showings-table tbody tr {
+
+  }
+
+  .showings-table tbody tr:nth-of-type(even) {
+    background-color: #0C0C0C;
+  }
+
+  .showings-table tbody tr:last-of-type {
+
+  }
+
+.showings-table td{
+
+}
+.flex {
+  display: flex;
+}
+.flex-column {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+.ml-20 {
+  margin-left: 20px;
+}
+.mr-20 {
+  margin-right: 20px;
+}
+.display-none {
+  display: none;
+}
+
+.movie-detail-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+}
+.btn-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  background-color: var(--clr-cinema-red);
+  width: 150px;
+  height: 48px;
+}
+.movie-index {
+  margin-top: 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-carousel {
+  width: 70%;
+}
+.main-carousel-item-bg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#main-carousel-btn {
+  position: absolute;
+  bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.main-carousel-title {
+  font-size: 78px;
+  position: absolute;
+  bottom: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.sub-carousels-container {
+  margin-top: 60px;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sub-carousel {
+  margin-top: 20px;
+  width: 80%;
+}
+.sub-carousel-heading {
+  padding-left: 20px;
+  width: 80%;
+}
+.sub-carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+}
+.form-group {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.sub-carousel-item-img {
+  width: 100%;
+}
+.slick-dots li button:before {
+  color: white !important;
+}
+/**/
+/*.main-carousel-title {
+  font-size: 78px;
+  position: absolute;
+  bottom: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}*/

@@ -1,60 +1,68 @@
 ﻿@model BerrasBio1._0.Models.Movie
-
 @{
-    ViewData["Title"] = "Details";
+  ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Movie</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RelaseDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RelaseDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Plot)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Plot)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BackdropUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BackdropUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TrailerUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrailerUrl)
-        </dd>
-    </dl>
+<div class="movie-details">
+
+  @*<div class="flex-column">
+    <div class="movie-details-nav">
+      <ul class="movie-details-nav-list" id="movie-details-nav-list">
+        <li class="movie-details-nav-item active" data-link="about"><span>About</span></li>
+        <li class="movie-details-nav-item" data-link="showings"><span>Showings</span></li>
+        <li class="movie-details-nav-item" data-link="trailer"><span>Trailer</span></li>
+      </ul>
+    </div>*@
+  <div class="movie-details-inner" id="movie-details-inner-about">
+    <div class="movie-details-poster-container">
+      <img src="~/assets/img/posters/@Model.ImageUrl" class="movie-details-poster-img" />
+    </div>
+    <div class="movie-details-info">
+      <h1>@Html.DisplayFor(model => model.Name)</h1>
+      @foreach (var genre in Model.Genres)
+      {
+        <span class="movie-detail-info-genre">@genre.Name</span>
+      }
+      <div class="movie-detail-info-plot">
+        <h4>Plot</h4>
+        <p>@Model.Plot</p>
+      </div>
+      <div class="movie-detail-info-crew">
+        <div class="flex">
+          <div>
+            <h4>Director</h4>
+            @Model.Director.Name
+          </div>
+          <div class="ml-20">
+            <h4>Producer</h4>
+            @Model.Producer.Name
+          </div>
+        </div>
+        <h4 class="mt-20">Featuring</h4>
+        @for (int i = 0; i < 3; i++)
+        {
+          <p>@Model.Actors.ToList()[i].Name</p>
+        }
+      </div>
+      <div class="movie-detail-btn-container">
+        <a asp-controller="Showings" asp-action="Movie" asp-route-id="@Model.Id" class="btn-primary">Book tickets</a>
+      </div>
+    </div>
+  </div>
+  @*<div class="movie-details-inner display-none" id="movie-details-inner-showings">
+      <ul class="movie-details-showings-list">
+        @foreach (var showing in Model.Showings)
+        {
+          <li>>@showing.StartTime.ToString();</li>
+        }
+      </ul>
+    </div>*@
+  @*<div class="movie-details-inner" id="movie-details-inner-trailer">
+      trailer
+    </div>*@
+
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+<div class="movie-details-bg-container"><img src="~/assets/img/backdrops/@Model.BackdropUrl" class="movie-details-bg" /></div>

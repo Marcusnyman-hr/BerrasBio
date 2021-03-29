@@ -240,20 +240,23 @@ namespace BerrasBio1._0.Migrations
 
             modelBuilder.Entity("BerrasBio1._0.Models.Ticket", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ShowingId")
+                    b.Property<int>("SeatId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShowingId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("SeatId");
 
                     b.HasIndex("ShowingId");
 
@@ -362,9 +365,19 @@ namespace BerrasBio1._0.Migrations
                         .WithMany("Tickets")
                         .HasForeignKey("CustomerId");
 
+                    b.HasOne("BerrasBio1._0.Models.Seat", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BerrasBio1._0.Models.Showing", "Showing")
                         .WithMany()
-                        .HasForeignKey("ShowingId");
+                        .HasForeignKey("ShowingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Seat");
 
                     b.Navigation("Showing");
                 });

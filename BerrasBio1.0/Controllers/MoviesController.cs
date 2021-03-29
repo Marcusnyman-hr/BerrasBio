@@ -22,7 +22,7 @@ namespace BerrasBio1._0.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(await _context.Movies.Include(m=>m.Genres).ToListAsync());
         }
 
         // GET: Movies/Details/5
@@ -34,7 +34,13 @@ namespace BerrasBio1._0.Controllers
             }
 
             var movie = await _context.Movies
+                .Include(m=>m.Genres)
+                .Include(m=>m.Actors)
+                .Include(m=>m.Director)
+                .Include(m=>m.Producer)
+                .Include(m=>m.Showings)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (movie == null)
             {
                 return NotFound();

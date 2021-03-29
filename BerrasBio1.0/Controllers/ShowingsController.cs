@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio1._0.Data;
 using BerrasBio1._0.Models;
+using BerrasBio1._0.Models.ViewModels;
 
 namespace BerrasBio1._0.Controllers
 {
@@ -22,7 +23,8 @@ namespace BerrasBio1._0.Controllers
         // GET: Showings
         public async Task<IActionResult> Index()
         {
-            var cinemaContext = _context.Showings.Include(s => s.Auditorium).Include(s => s.Movie);
+            
+            var cinemaContext = _context.Showings.Include(s => s.Auditorium).Include(s => s.Movie).Include(s=> s.Seats);
             return View(await cinemaContext.ToListAsync());
         }
 
@@ -44,6 +46,26 @@ namespace BerrasBio1._0.Controllers
             }
 
             return View(showing);
+        }
+        public async Task<IActionResult> Movie(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var showings = _context.Showings
+                .Where(s => s.MovieId == id)
+                .Include(s => s.Auditorium)
+                .Include(s => s.Movie)
+                .Include(s => s.Seats);
+
+            if (showings == null)
+            {
+                return NotFound();
+            }
+
+            return View(await showings.ToListAsync());
         }
 
         // GET: Showings/Create
@@ -177,5 +199,36 @@ namespace BerrasBio1._0.Controllers
         {
             return _context.Showings.Any(e => e.Id == id);
         }
+        public IActionResult BuyTicket(int id)
+        {
+            //För VG
+            //ViewData["SeatId"] = new SelectList(_context.Seats.Where(s=>s.Booked == false).OrderBy(s => s.Row), "Id", "SeatName");
+            ViewBag.ShowingId = id;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BuyTicket([Bind("FirstName,LastName,Email,ShowingId, AmountOfTickets")] BuyTicketVM buyTicketVM)
+        {
+            if (ModelState.IsValid)
+            {
+                List<Ticket> tickets = new List<Ticket>();
+                List<Seat> freeSeats = _context.Seats.Where(s => s.ShowingId == buyTicketVM.ShowingId && s.Booked == false).ToList();
+                for (int i = 0; i < buyTicketVM.AmountOfTickets; i++)
+                {
+                    Seat freeSeat = freeSeats[i];
+                    Ticket ticket = new Ticket { ShowingId = buyTicketVM.ShowingId, SeatId = freeSeat.Id };
+                    tickets.Add(ticket);
+                    freeSeat.Booked = true;
+                }
+                Customer customer = new Customer { FirstName = buyTicketVM.FirstName, LastName = buyTicketVM.LastName, Email = buyTicketVM.Email, Tickets = tickets };
+                _context.Add(customer);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
     }
 }
+
+

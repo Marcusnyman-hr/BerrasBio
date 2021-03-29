@@ -11,5 +11,6 @@ namespace BerrasBio1._0.Services
         public List<Movie> GetAllMoviesFromDb();
         public void FetchUpcomingMoviesFromApi(int amountOfPagesToFetch);
         public void SeedFromSqlFile();
+        public List<Movie> GetMoviesByAmount(int amount);
     }
 }

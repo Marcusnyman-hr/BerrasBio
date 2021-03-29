@@ -56,7 +56,7 @@ namespace BerrasBio1._0
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Cinema}/{action=Index}/{id?}");
+                    pattern: "{controller=Movies}/{action=Index}/{id?}");
             });
         }
     }

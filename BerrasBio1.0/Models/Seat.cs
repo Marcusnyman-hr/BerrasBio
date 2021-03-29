@@ -15,6 +15,13 @@ namespace BerrasBio1._0.Models
         public int ShowingId { get; set; }
         [ForeignKey("ShowingId")]
         public virtual Showing Showing { get; set; }
+        public string SeatName
+        {
+            get
+            {
+                return string.Format("{0} {1}", Row, Number);
+            }
+        }
 
     }
 }

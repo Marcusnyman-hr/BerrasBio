@@ -1,0 +1,65 @@
+﻿@model IEnumerable<BerrasBio1._0.Models.Showing>
+
+@{
+  ViewData["Title"] = "Movie";
+}
+
+<div class="movie-showings">
+  @if (Model.Count() < 1)
+  {
+    <h1>No planned showings for this movie</h1>
+    <a asp-controller="Movies" asp-action="Index">Go back</a>
+  }
+  else
+  {
+    <table class="showings-table">
+      <thead>
+        <tr>
+          <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+          </th>
+          <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+          </th>
+          <th>
+            @Html.DisplayNameFor(model => model.Movie)
+          </th>
+          <th>
+            @Html.DisplayNameFor(model => model.Auditorium)
+          </th>
+          <th>
+            Seats Available
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var item in Model)
+        {
+          <tr>
+            <td>
+              @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Movie.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Auditorium.Name)
+            </td>
+            <td>
+              @item.Seats.Where(s => s.Booked == false).Count()
+            </td>
+            <td>
+              <a asp-action="BuyTicket" asp-route-id="@item.Id">Buy Ticket ></a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+</div>
+

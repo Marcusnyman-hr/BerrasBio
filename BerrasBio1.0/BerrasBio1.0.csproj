@@ -19,9 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\ViewModels\" />
     <Folder Include="wwwroot\assets\img\backdrops\" />
     <Folder Include="wwwroot\assets\img\posters\" />
+    <Folder Include="wwwroot\assets\fonts\" />
+    <Folder Include="wwwroot\lib\NewFolder\" />
+    <Folder Include="wwwroot\lib\slick\" />
   </ItemGroup>
 
 </Project>
