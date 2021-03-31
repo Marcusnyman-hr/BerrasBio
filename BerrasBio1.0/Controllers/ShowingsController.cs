@@ -21,11 +21,53 @@ namespace BerrasBio1._0.Controllers
         }
 
         // GET: Showings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+            ViewBag.StartTime = String.IsNullOrEmpty(sortOrder) ? "StartTime" : "";
+            ViewBag.StartTime = sortOrder == "StartTime" ? "start_time_desc" : "StartTime";
+            ViewBag.EndTime = sortOrder == "EndTime" ? "end_time_desc" : "EndTime";
+            ViewBag.MovieTitle = sortOrder == "MovieTitle" ? "movie_title_desc" : "MovieTitle";
+            ViewBag.Auditorium = sortOrder == "Auditorium" ? "auditorium_desc" : "Auditorium";
+            ViewBag.Seats = sortOrder == "Seats" ? "seats_desc" : "Seats"; 
+
+            var cinemaContext = _context.Showings.Include(s => s.Auditorium).Include(s => s.Movie).Include(s => s.Seats).ToList();
+
+            switch (sortOrder)
+            {
+                case "StartTime":
+                    cinemaContext = cinemaContext.OrderBy(s=>s.StartTime).ToList();
+                    break;
+                case "start_time_desc":
+                    cinemaContext = cinemaContext.OrderByDescending(s => s.StartTime).ToList();
+                    break;
+                case "EndTime":
+                    cinemaContext = cinemaContext.OrderBy(s => s.EndTime).ToList();
+                    break;
+                case "end_time_desc":
+                    cinemaContext = cinemaContext.OrderByDescending(s => s.EndTime).ToList();
+                    break;
+                case "MovieTitle":
+                    cinemaContext = cinemaContext.OrderBy(s => s.Movie.Name).ToList();
+                    break;
+                case "movie_title_desc":
+                    cinemaContext = cinemaContext.OrderByDescending(s => s.Movie.Name).ToList();
+                    break;
+                case "Auditorium":
+                    cinemaContext = cinemaContext.OrderBy(s => s.Auditorium.Name).ToList();
+                    break;
+                case "auditorium_desc":
+                    cinemaContext = cinemaContext.OrderByDescending(s => s.Auditorium.Name).ToList();
+                    break;
+                case "Seats":
+                    cinemaContext = cinemaContext.OrderBy(s => s.Seats.Where(s => s.Booked == false).Count()).ToList();
+                    break;
+                case "seats_desc":
+                    cinemaContext = cinemaContext.OrderByDescending(s => s.Seats.Where(s => s.Booked == false).Count()).ToList();
+                    break;
+            }
+
             
-            var cinemaContext = _context.Showings.Include(s => s.Auditorium).Include(s => s.Movie).Include(s=> s.Seats);
-            return View(await cinemaContext.ToListAsync());
+            return View(cinemaContext);
         }
 
         // GET: Showings/Details/5
@@ -47,25 +89,65 @@ namespace BerrasBio1._0.Controllers
 
             return View(showing);
         }
-        public async Task<IActionResult> Movie(int? id)
+        public async Task<IActionResult> Movie(int? id, string sortOrder)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            ViewBag.StartTime = String.IsNullOrEmpty(sortOrder) ? "StartTime" : "";
+            ViewBag.StartTime = sortOrder == "StartTime" ? "start_time_desc" : "StartTime";
+            ViewBag.EndTime = sortOrder == "EndTime" ? "end_time_desc" : "EndTime";
+            ViewBag.MovieTitle = sortOrder == "MovieTitle" ? "movie_title_desc" : "MovieTitle";
+            ViewBag.Auditorium = sortOrder == "Auditorium" ? "auditorium_desc" : "Auditorium";
+            ViewBag.Seats = sortOrder == "Seats" ? "seats_desc" : "Seats";
 
             var showings = _context.Showings
                 .Where(s => s.MovieId == id)
                 .Include(s => s.Auditorium)
                 .Include(s => s.Movie)
-                .Include(s => s.Seats);
+                .Include(s => s.Seats).ToList();
 
             if (showings == null)
             {
                 return NotFound();
             }
+            switch (sortOrder)
+            {
+                case "StartTime":
+                    showings = showings.OrderBy(s => s.StartTime).ToList();
+                    break;
+                case "start_time_desc":
+                    showings = showings.OrderByDescending(s => s.StartTime).ToList();
+                    break;
+                case "EndTime":
+                    showings = showings.OrderBy(s => s.EndTime).ToList();
+                    break;
+                case "end_time_desc":
+                    showings = showings.OrderByDescending(s => s.EndTime).ToList();
+                    break;
+                case "MovieTitle":
+                    showings = showings.OrderBy(s => s.Movie.Name).ToList();
+                    break;
+                case "movie_title_desc":
+                    showings = showings.OrderByDescending(s => s.Movie.Name).ToList();
+                    break;
+                case "Auditorium":
+                    showings = showings.OrderBy(s => s.Auditorium.Name).ToList();
+                    break;
+                case "auditorium_desc":
+                    showings = showings.OrderByDescending(s => s.Auditorium.Name).ToList();
+                    break;
+                case "Seats":
+                    showings = showings.OrderBy(s => s.Seats.Where(s => s.Booked == false).Count()).ToList();
+                    break;
+                case "seats_desc":
+                    showings = showings.OrderByDescending(s => s.Seats.Where(s => s.Booked == false).Count()).ToList();
+                    break;
+            }
 
-            return View(await showings.ToListAsync());
+
+            return View(showings);
         }
 
         // GET: Showings/Create

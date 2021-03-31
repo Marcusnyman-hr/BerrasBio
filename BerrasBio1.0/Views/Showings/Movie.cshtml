@@ -12,53 +12,53 @@
   }
   else
   {
-    <table class="showings-table">
-      <thead>
-        <tr>
-          <th>
-            @Html.DisplayNameFor(model => model.StartTime)
-          </th>
-          <th>
-            @Html.DisplayNameFor(model => model.EndTime)
-          </th>
-          <th>
-            @Html.DisplayNameFor(model => model.Movie)
-          </th>
-          <th>
-            @Html.DisplayNameFor(model => model.Auditorium)
-          </th>
-          <th>
-            Seats Available
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach (var item in Model)
-        {
-          <tr>
-            <td>
-              @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-              @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-              @Html.DisplayFor(modelItem => item.Movie.Name)
-            </td>
-            <td>
-              @Html.DisplayFor(modelItem => item.Auditorium.Name)
-            </td>
-            <td>
-              @item.Seats.Where(s => s.Booked == false).Count()
-            </td>
-            <td>
-              <a asp-action="BuyTicket" asp-route-id="@item.Id">Buy Ticket ></a>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+<table class="showings-table">
+  <thead>
+    <tr>
+      <th>
+        @Html.ActionLink("Date", "Movie", new { sortOrder = ViewBag.StartTime })
+      </th>
+      <th>
+        @Html.ActionLink("End Time", "Movie", new { sortOrder = ViewBag.EndTime })
+      </th>
+      <th>
+        @Html.ActionLink("Movie Title", "Movie", new { sortOrder = ViewBag.MovieTitle })
+      </th>
+      <th>
+        @Html.ActionLink("Auditorium", "Movie", new { sortOrder = ViewBag.Auditorium })
+      </th>
+      <th>
+        @Html.ActionLink("Seats Available", "Movie", new { sortOrder = ViewBag.Seats })
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.StartTime)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Movie.Name)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Auditorium.Name)
+        </td>
+        <td>
+          @item.Seats.Where(s => s.Booked == false).Count()
+        </td>
+        <td>
+          <a asp-action="BuyTicket" asp-route-id="@item.Id">Buy Ticket ></a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
   }
 
 </div>

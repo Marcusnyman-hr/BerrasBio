@@ -9,19 +9,19 @@
     <thead>
       <tr>
         <th>
-          @Html.DisplayNameFor(model => model.StartTime)
+          @Html.ActionLink("Date", "Index", new { sortOrder = ViewBag.StartTime })
         </th>
         <th>
-          @Html.DisplayNameFor(model => model.EndTime)
+          @Html.ActionLink("End Time", "Index", new { sortOrder = ViewBag.EndTime })
         </th>
         <th>
-          @Html.DisplayNameFor(model => model.Movie)
+          @Html.ActionLink("Movie Title", "Index", new { sortOrder = ViewBag.MovieTitle })
         </th>
         <th>
-          @Html.DisplayNameFor(model => model.Auditorium)
+          @Html.ActionLink("Auditorium", "Index", new { sortOrder = ViewBag.Auditorium })
         </th>
         <th>
-          Seats Available
+          @Html.ActionLink("Seats Available", "Index", new { sortOrder = ViewBag.Seats })
         </th>
         <th></th>
       </tr>
