@@ -149,6 +149,61 @@ namespace BerrasBio1._0.Controllers
 
             return View(showings);
         }
+        public IActionResult Today(string sortOrder)
+        {
+            ViewBag.StartTime = String.IsNullOrEmpty(sortOrder) ? "StartTime" : "";
+            ViewBag.StartTime = sortOrder == "StartTime" ? "start_time_desc" : "StartTime";
+            ViewBag.EndTime = sortOrder == "EndTime" ? "end_time_desc" : "EndTime";
+            ViewBag.MovieTitle = sortOrder == "MovieTitle" ? "movie_title_desc" : "MovieTitle";
+            ViewBag.Auditorium = sortOrder == "Auditorium" ? "auditorium_desc" : "Auditorium";
+            ViewBag.Seats = sortOrder == "Seats" ? "seats_desc" : "Seats";
+            DateTime dateToday = DateTime.Today;
+
+            var showings = _context.Showings
+                .Where(s => s.StartTime.Date == dateToday.Date)
+                .Include(s => s.Auditorium)
+                .Include(s => s.Movie)
+                .Include(s => s.Seats).ToList();
+
+            if (showings == null)
+            {
+                return NotFound();
+            }
+            switch (sortOrder)
+            {
+                case "StartTime":
+                    showings = showings.OrderBy(s => s.StartTime).ToList();
+                    break;
+                case "start_time_desc":
+                    showings = showings.OrderByDescending(s => s.StartTime).ToList();
+                    break;
+                case "EndTime":
+                    showings = showings.OrderBy(s => s.EndTime).ToList();
+                    break;
+                case "end_time_desc":
+                    showings = showings.OrderByDescending(s => s.EndTime).ToList();
+                    break;
+                case "MovieTitle":
+                    showings = showings.OrderBy(s => s.Movie.Name).ToList();
+                    break;
+                case "movie_title_desc":
+                    showings = showings.OrderByDescending(s => s.Movie.Name).ToList();
+                    break;
+                case "Auditorium":
+                    showings = showings.OrderBy(s => s.Auditorium.Name).ToList();
+                    break;
+                case "auditorium_desc":
+                    showings = showings.OrderByDescending(s => s.Auditorium.Name).ToList();
+                    break;
+                case "Seats":
+                    showings = showings.OrderBy(s => s.Seats.Where(s => s.Booked == false).Count()).ToList();
+                    break;
+                case "seats_desc":
+                    showings = showings.OrderByDescending(s => s.Seats.Where(s => s.Booked == false).Count()).ToList();
+                    break;
+            }
+            return View(showings);
+        }
 
         // GET: Showings/Create
         public IActionResult Create()
