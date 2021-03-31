@@ -29,7 +29,7 @@
     <tbody>
       @foreach (var item in Model)
       {
-        <tr>
+        <tr class="@(item.Seats.Where(s => s.Booked == false).Count() < 1 ? "fully-booked" : "")">
           <td>
             @Html.DisplayFor(modelItem => item.StartTime)
           </td>
@@ -61,7 +61,6 @@
             {
               <a asp-action="BuyTicket" asp-route-id="@item.Id">Buy Ticket ></a>
             }
-            
           </td>
         </tr>
       }

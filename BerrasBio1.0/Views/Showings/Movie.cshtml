@@ -36,26 +36,40 @@
   <tbody>
     @foreach (var item in Model)
     {
-      <tr>
-        <td>
-          @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.EndTime)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.Movie.Name)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.Auditorium.Name)
-        </td>
-        <td>
+    <tr class="@(item.Seats.Where(s => s.Booked == false).Count() < 1 ? "fully-booked" : "")">
+      <td>
+        @Html.DisplayFor(modelItem => item.StartTime)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.EndTime)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Movie.Name)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Auditorium.Name)
+      </td>
+      <td>
+        @if (item.Seats.Where(s => s.Booked == false).Count() < 1)
+        {
+          <span>SOLD OUT</span>
+        }
+        else
+        {
           @item.Seats.Where(s => s.Booked == false).Count()
-        </td>
-        <td>
+        }
+      </td>
+      <td>
+        @if (item.Seats.Where(s => s.Booked == false).Count() < 1)
+        {
+          <span></span>
+        }
+        else
+        {
           <a asp-action="BuyTicket" asp-route-id="@item.Id">Buy Ticket ></a>
-        </td>
-      </tr>
+        }
+      </td>
+    </tr>
     }
   </tbody>
 </table>

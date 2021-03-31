@@ -347,6 +347,11 @@ header .logo-container {
 .slick-dots li button:before {
   color: white !important;
 }
+
+.fully-booked {
+  background-color: darkred!important;
+  color: silver;
+}
 /**/
 /*.main-carousel-title {
   font-size: 78px;
