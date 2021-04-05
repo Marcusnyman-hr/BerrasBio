@@ -19,5 +19,7 @@ namespace BerrasBio1._0.Models
         [ForeignKey("AuditoriumId")]
         public virtual Auditorium Auditorium { get; set; }
         public ICollection<Seat> Seats { get; set; }
+        public decimal Price { get; set; }
+
     }
 }

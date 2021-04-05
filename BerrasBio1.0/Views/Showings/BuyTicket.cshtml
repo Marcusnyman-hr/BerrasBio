@@ -22,19 +22,16 @@
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
       </div>
-      @*<div class="form-group">
-        <label asp-for="ShowingId" class="control-label">Start time</label>
-        <select asp-for="ShowingId" class="form-control" asp-items="ViewBag.ShowingId"></select>
-      </div>*@
       <input asp-for="ShowingId" value="@ViewBag.ShowingId" class="display-none"/>
       <div class="form-group">
         <label asp-for="AmountOfTickets" class="control-label"></label>
-        <input asp-for="AmountOfTickets" class="form-control" />
+        <input asp-for="AmountOfTickets" class="form-control" id="amountOfTickets"/>
         <span asp-validation-for="AmountOfTickets" class="text-danger"></span>
       </div>
       <div class="form-group">
         <input type="submit" value="Buy" class="btn-primary" />
       </div>
+      <span id="order-total"></span>
     </form>
   </div>
 
@@ -42,5 +39,15 @@
     <a asp-action="Index">Back to List</a>
   </div>
   </div>
+
+<script>
+  let ticketPrice = parseInt('@ViewBag.ShowingPrice', 10);
+  let ticketAmountInput = document.getElementById("amountOfTickets");
+  let orderTotal = document.getElementById("order-total");
+  ticketAmountInput.addEventListener('input', function (evt) {
+    let sum = ticketPrice * this.value;
+    orderTotal.innerText = sum + '$';
+  });
+</script>
 
 

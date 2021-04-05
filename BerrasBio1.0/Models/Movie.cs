@@ -9,7 +9,7 @@ namespace BerrasBio1._0.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string RelaseDate { get; set; }
+        public DateTime RelaseDate { get; set; }
         public string Plot { get; set; }
         public int Duration { get; set; }
         public string ImageUrl { get; set; }

@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace BerrasBio1._0.Models
 {
-    public class Auditorium
+    public class Price
     {
         public int Id { get; set; }
+        public decimal Amount { get; set; }
+        public string Type { get; set; }
         public string Name { get; set; }
-        public int Seats { get; set; }
-        public ICollection<Showing> Showings { get; set; }
-        public decimal PriceModifier { get; set; }
     }
 }

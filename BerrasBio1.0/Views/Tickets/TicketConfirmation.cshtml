@@ -1,0 +1,56 @@
+﻿@model IEnumerable<BerrasBio1._0.Models.Ticket>
+
+@{
+  ViewData["Title"] = "TicketConfirmation";
+}
+
+
+<div class="ticket-confirmation">
+  <div class="ticket-confirmation-heading">
+    <h2>Your tickets: </h2>
+    <h3>Please print the tickets and bring them with you.</h3>
+  </div>
+  @foreach (var ticket in Model)
+  {
+    <div class="printable-ticket">
+      <div class="printable-ticket-bg-container"><img src="~/assets/img/backdrops/@ticket.Showing.Movie.BackdropUrl" class="printable-ticket-bg" /></div>
+      <div class="printable-ticket-header">
+        <h3>@ticket.Showing.Movie.Name</h3>
+      </div>
+      <div class="printable-ticket-information">
+        <h5>Buyers Name:</h5>
+        <h4>@ViewBag.CustomerName</h4>
+        <h5>Row and seat number:</h5>
+        <h4>@ticket.Seat.Row @ticket.Seat.Number</h4>
+        <h5>Auditorium:</h5>
+        <h4>@ticket.Showing.Auditorium.Name</h4>
+        <h5>Movie Starting at:</h5>
+        <h4>@ticket.Showing.StartTime.ToString("HH:mm")</h4>
+        <h5>Date:</h5>
+        <h4>@ticket.Showing.StartTime.ToString("dd/MM/yyyy")</h4>
+        <div class="qrcode">@ticket.Id</div>
+      </div>
+    </div>
+  }
+
+</div>
+
+<script type="text/javascript" src="~/lib/qrcodejs/qrcode.min.js"></script>
+<script type="text/javascript">
+  let tickets = document.querySelectorAll("div.qrcode");
+  console.log(tickets.length)
+  for (let i = 0; i < tickets.length; i++) {
+    let code = tickets[i].innerHTML;
+    tickets[i].innerHTML = "";
+    var qrcode = new QRCode(tickets[i], {
+      text: code,
+      width: 128,
+      height: 128,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+
+</script>
+

@@ -5,6 +5,10 @@
     {
       "library": "slick-carousel@1.8.1",
       "destination": "wwwroot/lib/slick-carousel/"
+    },
+    {
+      "library": "qrcodejs@1.0.0",
+      "destination": "wwwroot/lib/qrcodejs/"
     }
   ]
 }

@@ -218,12 +218,13 @@ namespace BerrasBio1._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StartTime,MovieId,AuditoriumId")] Showing showing)
+        public async Task<IActionResult> Create([Bind("Id,StartTime,MovieId,AuditoriumId,Price")] Showing showing)
         {
             if (ModelState.IsValid)
             {
                 int amountOfSeats = _context.Auditoriums.Where(a => a.Id == showing.AuditoriumId).FirstOrDefault().Seats;
-                int duration = _context.Movies.Where(m => m.Id == showing.MovieId).FirstOrDefault().Duration;
+                Movie movie = _context.Movies.Where(m => m.Id == showing.MovieId).FirstOrDefault();
+                int duration = movie.Duration;
                 DateTime endTime = showing.StartTime.AddMinutes(duration);
                 showing.EndTime = endTime;
                 List<Seat> seats = new List<Seat>();
@@ -235,8 +236,20 @@ namespace BerrasBio1._0.Controllers
                         seats.Add(new Seat { Booked = false, Row = letters[i].ToString(), Number = y });
                     }
                 }
+                if ((movie.RelaseDate - DateTime.Now).TotalDays < 30)
+                {
+                    showing.Price += _context.Prices.Where(p => p.Name == "NewMovie").FirstOrDefault().Amount;
+                }
+                if(showing.StartTime.Hour > 10 && showing.StartTime.Hour < 19)
+                {
+                    showing.Price += _context.Prices.Where(p => p.Name == "DayShow").FirstOrDefault().Amount;
+                }
+                if(showing.StartTime.Hour > 18 && showing.StartTime.Hour <= 23)
+                {
+                    showing.Price += _context.Prices.Where(p => p.Name == "EveningShow").FirstOrDefault().Amount;
+                }
                 showing.Seats = seats;
-                _context.Add(showing);
+                _context.Showings.Add(showing);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -341,6 +354,7 @@ namespace BerrasBio1._0.Controllers
             //För VG
             //ViewData["SeatId"] = new SelectList(_context.Seats.Where(s=>s.Booked == false).OrderBy(s => s.Row), "Id", "SeatName");
             ViewBag.ShowingId = id;
+            ViewBag.ShowingPrice = _context.Showings.Where(s => s.Id == id).FirstOrDefault().Price;
             return View();
         }
         [HttpPost]
@@ -354,14 +368,32 @@ namespace BerrasBio1._0.Controllers
                 for (int i = 0; i < buyTicketVM.AmountOfTickets; i++)
                 {
                     Seat freeSeat = freeSeats[i];
-                    Ticket ticket = new Ticket { ShowingId = buyTicketVM.ShowingId, SeatId = freeSeat.Id };
+                    Ticket ticket = new Ticket { ShowingId = buyTicketVM.ShowingId, SeatId = freeSeat.Id, Price = _context.Showings.Where(s=>s.Id == buyTicketVM.ShowingId).FirstOrDefault().Price };
                     tickets.Add(ticket);
                     freeSeat.Booked = true;
                 }
-                Customer customer = new Customer { FirstName = buyTicketVM.FirstName, LastName = buyTicketVM.LastName, Email = buyTicketVM.Email, Tickets = tickets };
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Customer customer = _context.Customers.Where(c => c.Email == buyTicketVM.Email).FirstOrDefault();
+                if(customer == null) {
+                    customer = new Customer() { FirstName = buyTicketVM.FirstName, LastName = buyTicketVM.LastName, Email = buyTicketVM.Email, Tickets = tickets };
+                    _context.Customers.Add(customer);
+                } else
+                {
+                    if(customer.Tickets != null)
+                    {
+                        List<Ticket> oldTickets = customer.Tickets.ToList();
+                        oldTickets.AddRange(tickets);
+                        customer.Tickets = oldTickets;
+                    } else
+                    {
+                        customer.Tickets = tickets;
+                    }
+                    
+                    
+                }
+                
+                _context.SaveChanges();
+                return RedirectToAction("TicketConfirmation", "Tickets", new { id = customer.Id });
+                
             }
             return View();
         }

@@ -25,6 +25,27 @@ namespace BerrasBio1._0.Controllers
             var cinemaContext = _context.Tickets.Include(t => t.Seat).Include(t => t.Showing);
             return View(await cinemaContext.ToListAsync());
         }
+        public IActionResult TicketConfirmation(int id)
+        {
+
+            var customer = _context.Customers
+                .Where(c=>c.Id == id)
+                .Include(customer => customer.Tickets)
+                .ThenInclude(ticket => ticket.Showing)
+                .ThenInclude(showing=>showing.Movie)
+                .Include(customer => customer.Tickets)
+                .ThenInclude(ticket=>ticket.Seat)
+                .Include(customer => customer.Tickets)
+                .ThenInclude(ticket => ticket.Showing)
+                .ThenInclude(showing => showing.Auditorium).FirstOrDefault();
+            ViewBag.CustomerName = $"{customer.FirstName} {customer.LastName}";
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer.Tickets);
+        }
 
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(string id)

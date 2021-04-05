@@ -3,6 +3,7 @@ using BerrasBio1._0.Models;
 using BerrasBio1._0.Models.JsonModels;
 using Microsoft.EntityFrameworkCore;
 using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -118,7 +119,7 @@ namespace BerrasBio1._0.Services
                     Movie newMovie = new Movie()
                     {
                         Name = response.Data.Title,
-                        RelaseDate = response.Data.ReleaseDate,
+                        RelaseDate = Convert.ToDateTime(response.Data.ReleaseDate),
                         Plot = response.Data.Overview,
                         Duration = response.Data.Runtime,
                         ImageUrl = response.Data.PosterPath,

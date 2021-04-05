@@ -20,6 +20,7 @@ namespace BerrasBio1._0.Models
         public int SeatId { get; set; }
         [ForeignKey("SeatId")]
         public virtual Seat Seat { get; set; }
+        public decimal Price { get; set; }
 
     }
 }

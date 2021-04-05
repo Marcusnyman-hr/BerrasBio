@@ -29,7 +29,7 @@
     <tbody>
       @foreach (var item in Model)
       {
-        <tr class="@(item.Seats.Where(s => s.Booked == false).Count() < 1 ? "fully-booked" : "")">
+        <tr class="@(item.Seats.Where(s => s.Booked == false).Count() < 1 | DateTime.Compare(item.StartTime, DateTime.Now) < 0 ? "fully-booked" : "")">
           <td>
             @Html.DisplayFor(modelItem => item.StartTime)
           </td>
@@ -47,6 +47,10 @@
             {
               <span>SOLD OUT</span>
             }
+            else if (DateTime.Compare(item.StartTime, DateTime.Now) < 0)
+            {
+              <span>To late</span>
+            }
             else
             {
               @item.Seats.Where(s => s.Booked == false).Count()
@@ -54,6 +58,9 @@
           </td>
           <td>
             @if (item.Seats.Where(s => s.Booked == false).Count() < 1)
+            {
+              <span></span>
+            } else if(DateTime.Compare(item.StartTime, DateTime.Now) < 0)
             {
               <span></span>
             }

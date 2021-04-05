@@ -25,8 +25,8 @@ namespace BerrasBio1._0
                 bool DatabaseDoesNotExist = dbContext.Database.EnsureCreated();
                 if (DatabaseDoesNotExist)
                 {
-                    movieService.SeedFromSqlFile();
-                    //movieService.FetchUpcomingMoviesFromApi(10);
+                    //movieService.SeedFromSqlFile();
+                    movieService.FetchUpcomingMoviesFromApi(2);
                 };
             }
             host.Run();
