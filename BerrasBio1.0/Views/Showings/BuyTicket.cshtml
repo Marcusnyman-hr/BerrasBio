@@ -10,22 +10,24 @@
       <div class="form-group">
         <label asp-for="FirstName" class="control-label"></label>
         <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
       </div>
+      <span asp-validation-for="FirstName" class="text-danger"></span>
       <div class="form-group">
         <label asp-for="LastName" class="control-label"></label>
         <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+
       </div>
+      <span asp-validation-for="LastName" class="text-danger"></span>
       <div class="form-group">
         <label asp-for="Email" class="control-label"></label>
         <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
       </div>
+      <span asp-validation-for="Email" class="text-danger"></span>
       <input asp-for="ShowingId" value="@ViewBag.ShowingId" class="display-none" />
       <div class="form-group">
         <input type="hidden" asp-for="AmountOfTickets" class="form-control" id="amountOfTickets" />
         <input type="hidden" asp-for="SelectedSeats" class="form-control" id="selectedSeats" />
+          <span asp-validation-for="AmountOfTickets" class="text-danger"></span>
       </div>
       <div class="seat-picker">
 
@@ -63,16 +65,6 @@
             }
           </div>
         }
-        @*<ul>
-        @for (var i = 0; i < Model.Seats.Count; i++)
-        {
-          <li>
-            <input type="checkbox" asp-for="@Model.Seats[i].Booked" />
-            <label asp-for="@Model.Seats[i].Booked">@Model.Seats[i].Row  @Model.Seats[i].Number</label>
-            <input type="hidden" asp-for="@Model.Seats[i].Id" />
-          </li>
-        }
-      </ul>*@
         <span id="seat-picker-warning"></span>
       </div>
       <div class="ticket-prices flex-center">
@@ -98,12 +90,25 @@
   let amountOfTicketsInput = document.getElementById("amountOfTickets");
   let orderTotal = document.getElementById("order-total");
 
-
   let freeSeats = document.getElementsByClassName("seat-free");
 
   let selectedSeatsInput = document.getElementById("selectedSeats");
-  let selectedSeats = [];
 
+  let selectedSeats = [];
+    window.onload = function () {
+    let selectedSeats = '@Model.SelectedSeats';
+      if (selectedSeats) {
+        selectedSeatsInput.value = selectedSeats;
+        let splitted = selectedSeats.split(",");
+        amountOfTicketsInput.value = splitted.length;
+      splitted.forEach((seat) => {
+        let selectedSeat = document.getElementById(seat);
+        selectedSeat.classList.add("seat-selected");
+      })
+    } else {
+      console.log("selected seats dont exist")
+    }
+  };
   let selectSeat = function () {
     let id = this.id
     let isAlreadySelected = selectedSeats.indexOf(id);

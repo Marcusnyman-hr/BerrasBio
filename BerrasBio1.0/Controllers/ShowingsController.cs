@@ -421,7 +421,21 @@ namespace BerrasBio1._0.Controllers
                 return RedirectToAction("TicketConfirmation", "Tickets", new { id = customer.Id });
                 
             }
-            return View();
+            var showing = _context.Showings
+                .Include(s => s.Seats)
+                .Include(s => s.Auditorium)
+                .Include(s => s.Movie)
+                .FirstOrDefault(s => s.Id == buyTicketVM.ShowingId);
+
+            var seats = showing.Seats.OrderBy(s => s.Row).ThenBy(s => s.Number).ToList();
+            var model = new BuyTicketVM();
+            model.Seats = seats;
+            model.SelectedSeats = buyTicketVM.SelectedSeats;
+            model.AmountOfTickets = buyTicketVM.AmountOfTickets;
+
+            ViewBag.ShowingId = buyTicketVM.ShowingId; 
+            ViewBag.ShowingPrice = showing.Price;
+            return View(model);
         }
     }
 }
