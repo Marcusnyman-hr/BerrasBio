@@ -6,63 +6,98 @@
 
 <div class="movie-details">
 
-  @*<div class="flex-column">
+  <div class="flex-column">
     <div class="movie-details-nav">
       <ul class="movie-details-nav-list" id="movie-details-nav-list">
         <li class="movie-details-nav-item active" data-link="about"><span>About</span></li>
-        <li class="movie-details-nav-item" data-link="showings"><span>Showings</span></li>
         <li class="movie-details-nav-item" data-link="trailer"><span>Trailer</span></li>
       </ul>
-    </div>*@
-  <div class="movie-details-inner" id="movie-details-inner-about">
-    <div class="movie-details-poster-container">
-      <img src="~/assets/img/posters/@Model.ImageUrl" class="movie-details-poster-img" />
     </div>
-    <div class="movie-details-info">
-      <h1>@Html.DisplayFor(model => model.Name)</h1>
-      @foreach (var genre in Model.Genres)
-      {
-        <span class="movie-detail-info-genre">@genre.Name</span>
-      }
-      <div class="movie-detail-info-plot">
-        <h4>Plot</h4>
-        <p>@Model.Plot</p>
+    <div class="movie-details-inner" id="movie-details-inner-about">
+      <div class="movie-details-poster-container">
+        <img src="~/assets/img/posters/@Model.ImageUrl" class="movie-details-poster-img" />
       </div>
-      <div class="movie-detail-info-crew">
-        <div class="flex">
-          <div>
-            <h4>Director</h4>
-            @Model.Director.Name
-          </div>
-          <div class="ml-20">
-            <h4>Producer</h4>
-            @Model.Producer.Name
-          </div>
+      <div class="movie-details-info">
+        <h1>@Html.DisplayFor(model => model.Name)</h1>
+        @foreach (var genre in Model.Genres)
+        {
+          <span class="movie-detail-info-genre">@genre.Name</span>
+        }
+        <div class="movie-detail-info-plot">
+          <h4>Plot</h4>
+          <p>@Model.Plot</p>
         </div>
-        <h4 class="mt-20">Featuring</h4>
-        @for (int i = 0; i < 3; i++)
-        {
-          <p>@Model.Actors.ToList()[i].Name</p>
-        }
-      </div>
-      <div class="movie-detail-btn-container">
-        <a asp-controller="Showings" asp-action="Movie" asp-route-id="@Model.Id" class="btn-primary">Book tickets</a>
+        <div class="movie-detail-info-crew">
+          <div class="flex">
+            <div>
+              @if (@Model.Director != null)
+              {
+                <h4>Director</h4>
+                @Model.Director.Name
+              }
+
+            </div>
+            <div class="ml-20">
+              @if (@Model.Producer != null)
+              {
+                <h4>Producer</h4>
+                @Model.Producer.Name
+              }
+            </div>
+          </div>
+          @if (@Model.Actors.Count > 3)
+          {
+            <h4 class="mt-20">Featuring</h4>
+            @for (int i = 0; i < 3; i++)
+            {
+              <p>@Model.Actors.ToList()[i].Name</p>
+            }
+          }
+        </div>
+        <div class="movie-detail-btn-container mt-20">
+          <a asp-controller="Showings" asp-action="Movie" asp-route-id="@Model.Id" class="btn-primary">Book tickets</a>
+        </div>
       </div>
     </div>
-  </div>
-  @*<div class="movie-details-inner display-none" id="movie-details-inner-showings">
-      <ul class="movie-details-showings-list">
-        @foreach (var showing in Model.Showings)
-        {
-          <li>>@showing.StartTime.ToString();</li>
-        }
-      </ul>
-    </div>*@
-  @*<div class="movie-details-inner" id="movie-details-inner-trailer">
-      trailer
-    </div>*@
 
-</div>
+      <div class="movie-details-inner  display-none" id="movie-details-inner-trailer">
+        <iframe width="560" height="315" src="@Model.TrailerUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+
+  </div>
 
 
 <div class="movie-details-bg-container"><img src="~/assets/img/backdrops/@Model.BackdropUrl" class="movie-details-bg" /></div>
+
+
+<script>
+  let movieDetailsNav = document.getElementById("movie-details-nav-list");
+
+  let aboutSection = document.getElementById("movie-details-inner-about");
+  let trailerSection = document.getElementById("movie-details-inner-trailer");
+
+  movieDetailsNav.addEventListener('click', function (event) {
+  if (event.target.parentElement.getAttribute("data-link") != null) {
+    let links = document.getElementById("movie-details-nav-list").getElementsByTagName("li");
+    for (let i = 0; i < links.length; i++) {
+      links[i].classList.remove("active")
+    }
+    let link = event.target.parentElement.getAttribute("data-link");
+    switch (link) {
+      case "about":
+        event.target.parentElement.classList.add("active");
+        trailerSection.classList.add("display-none")
+        aboutSection.classList.remove("display-none")
+        console.log("About click");
+        break;
+      case "trailer":
+        event.target.parentElement.classList.add("active");
+        aboutSection.classList.add("display-none")
+        trailerSection.classList.remove("display-none")
+        console.log("Trailer click");
+        break;
+    }
+  }
+}, false);
+</script>

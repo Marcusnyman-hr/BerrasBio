@@ -16,6 +16,9 @@
 </head>
 <body>
   <header>
+    <div class="logo-container">
+      <a class="logo-text" asp-area="" asp-controller="Movies" asp-action="Index">Berras Bio</a>
+    </div>
     <div class="navigation-toggle-container">
       <button class="hamburger hamburger--collapse" type="button" id="nav-toggle">
         <span class="hamburger-box">
@@ -23,27 +26,21 @@
         </span>
       </button>
     </div>
-    @*<div class="logo-container">
-        <h2 class="logo-text">Berras Bio</h2>
-      </div>*@
   </header>
   <nav class="navigation" id="navigation">
     <div class="nav-list-container">
       <ul class="nav-list">
         <li class="nav-list-item">
-          <a class="nav-list-item-link" asp-area="" asp-controller="Movies" asp-action="Index">Home</a>
+          <a class="nav-list-item-link" asp-area="" asp-controller="Movies" asp-action="Index">Movies</a>
         </li>
         <li class="nav-list-item">
           <a class="nav-list-item-link" asp-area="" asp-controller="Showings" asp-action="Today">Showings today</a>
         </li>
         <li class="nav-list-item">
-          <a class="nav-list-item-link" asp-area="" asp-controller="Auditoriums" asp-action="Index">Auditoriums</a>
+          <a class="nav-list-item-link" asp-area="" asp-controller="Showings" asp-action="Index">All Upcoming Showings</a>
         </li>
         <li class="nav-list-item">
-          <a class="nav-list-item-link" asp-area="" asp-controller="Showings" asp-action="Index">Showings</a>
-        </li>
-        <li class="nav-list-item">
-          <a class="nav-list-item-link" asp-area="" asp-controller="Showings" asp-action="Create">Create Showing (Admin)</a>
+          <a class="nav-list-item-link" asp-area="" asp-controller="Showings" asp-action="PriceList">Price List</a>
         </li>
       </ul>
     </div>

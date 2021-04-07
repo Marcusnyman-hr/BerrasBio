@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio1._0.Data;
 using BerrasBio1._0.Models;
+using System.Collections;
 
 namespace BerrasBio1._0.Controllers
 {
@@ -40,6 +41,10 @@ namespace BerrasBio1._0.Controllers
                 .Include(m=>m.Producer)
                 .Include(m=>m.Showings)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            string trailerUrl = movie.TrailerUrl;
+            string[] splittedUrl = trailerUrl.Split('/');
+            string embedUrl = $"https://www.youtube.com/embed/{splittedUrl.Last()}";
+            movie.TrailerUrl = embedUrl;
 
             if (movie == null)
             {

@@ -5,7 +5,7 @@
 }
 <div class="buy-ticket">
   <div class="buy-ticket-form">
-    <form asp-action="BuyTicket" name="buyTicket">
+    <form asp-action="BuyTicket" name="buyTicket" id="buy-ticket-form">
       <div asp-validation-summary="ModelOnly" class="text-danger"></div>
       <div class="form-group">
         <label asp-for="FirstName" class="control-label"></label>
@@ -22,32 +22,124 @@
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
       </div>
-      <input asp-for="ShowingId" value="@ViewBag.ShowingId" class="display-none"/>
+      <input asp-for="ShowingId" value="@ViewBag.ShowingId" class="display-none" />
       <div class="form-group">
-        <label asp-for="AmountOfTickets" class="control-label"></label>
-        <input asp-for="AmountOfTickets" class="form-control" id="amountOfTickets"/>
-        <span asp-validation-for="AmountOfTickets" class="text-danger"></span>
+        <input type="hidden" asp-for="AmountOfTickets" class="form-control" id="amountOfTickets" />
+        <input type="hidden" asp-for="SelectedSeats" class="form-control" id="selectedSeats" />
       </div>
-      <div class="form-group">
-        <input type="submit" value="Buy" class="btn-primary" />
+      <div class="seat-picker">
+
+        @for (int i = 0; i < Model.Seats.Count / 10; i++)
+        {
+          <div class="seat-row">
+            @if (i == 0)
+            {
+              for (int y = 0; y < 10; y++)
+              {
+                if (Model.Seats[y].Booked == true)
+                {
+                  <div class="seat seat-booked" id="@Model.Seats[y].Id">@Model.Seats[y].Row@Model.Seats[y].Number</div>
+                }
+                else
+                {
+                  <div class="seat seat-free" id="@Model.Seats[y].Id">@Model.Seats[y].Row@Model.Seats[y].Number</div>
+                }
+              }
+            }
+            else
+            {
+              for (int y = 0; y < 10; y++)
+              {
+                int seat = int.Parse(i.ToString() + y.ToString());
+                if (Model.Seats[seat].Booked == true)
+                {
+                  <div class="seat seat-booked" id="@Model.Seats[seat].Id">@Model.Seats[seat].Row@Model.Seats[seat].Number</div>
+                }
+                else
+                {
+                  <div class="seat seat-free" id="@Model.Seats[seat].Id">@Model.Seats[seat].Row@Model.Seats[seat].Number</div>
+                }
+              }
+            }
+          </div>
+        }
+        @*<ul>
+        @for (var i = 0; i < Model.Seats.Count; i++)
+        {
+          <li>
+            <input type="checkbox" asp-for="@Model.Seats[i].Booked" />
+            <label asp-for="@Model.Seats[i].Booked">@Model.Seats[i].Row  @Model.Seats[i].Number</label>
+            <input type="hidden" asp-for="@Model.Seats[i].Id" />
+          </li>
+        }
+      </ul>*@
+        <span id="seat-picker-warning"></span>
       </div>
-      <span id="order-total"></span>
+      <div class="ticket-prices flex-center">
+        <h5>Price per ticket for this show: @ViewBag.ShowingPrice</h5>
+      </div>
+      <div class="order-total">
+        <h4>Your order total is: </h4><h3 id="order-total"></h3>
+      </div>
+      <div class="flex-center">
+        <a href="javascript:{}" onclick="submitForm()" class="btn-primary">submit</a>
+      </div>
+
     </form>
   </div>
 
   <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="back-link">Back to List</a>
   </div>
   </div>
 
 <script>
   let ticketPrice = parseInt('@ViewBag.ShowingPrice', 10);
-  let ticketAmountInput = document.getElementById("amountOfTickets");
+  let amountOfTicketsInput = document.getElementById("amountOfTickets");
   let orderTotal = document.getElementById("order-total");
-  ticketAmountInput.addEventListener('input', function (evt) {
-    let sum = ticketPrice * this.value;
-    orderTotal.innerText = sum + '$';
-  });
+
+
+  let freeSeats = document.getElementsByClassName("seat-free");
+
+  let selectedSeatsInput = document.getElementById("selectedSeats");
+  let selectedSeats = [];
+
+  let selectSeat = function () {
+    let id = this.id
+    let isAlreadySelected = selectedSeats.indexOf(id);
+    if (isAlreadySelected != -1) {
+      selectedSeats.splice(isAlreadySelected, 1);
+      this.classList.remove("seat-selected")
+    } else {
+      if (selectedSeats.length >= 12) {
+        document.getElementById("seat-picker-warning").innerText = "You can't reserve more than 12 seats.";
+        return;
+      }
+      this.classList.add("seat-selected");
+      selectedSeats.push(id);
+    }
+    amountOfTicketsInput.value = selectedSeats.length;
+    selectedSeatsInput.value = selectedSeats.toString();
+    let sum = ticketPrice * selectedSeats.length;
+    orderTotal.innerText = '  ' + sum + '$';
+    console.log(isAlreadySelected);
+    console.log(selectedSeats);
+  };
+
+  for (let i = 0; i < freeSeats.length; i++) {
+    freeSeats[i].addEventListener('click', selectSeat, false);
+  }
+
+  let submitForm = function () {
+    if (amountOfTicketsInput.value > 0 || selectedSeatsInput.value.length > 1) {
+      document.getElementById('buy-ticket-form').submit();
+    } else {
+      document.getElementById("seat-picker-warning").innerText = "Please chose your seats before proceeding.";
+    }
+
+  }
+
+
 </script>
 
 

@@ -19,6 +19,59 @@ namespace BerrasBio1._0.Services
             _db = db;
         }
 
+        public void CreateShowings()
+        {
+            Random random = new Random();
+            for (int i = 0; i < 100; i++)
+            {
+                for(int f = 0; f < 15; f =f + 3)
+                {
+                    DateTime now = DateTime.Now.AddDays(i);
+                    DateTime newDate = new DateTime(now.Year, now.Month, now.Day, 08 + f, 00, 00);
+                    var randomMovieId = random.Next(1, 112);
+                    var randomAuditorium = random.Next(1, 3);
+
+                    Showing showing = new Showing() { StartTime = newDate, MovieId = randomMovieId, AuditoriumId = randomAuditorium, Price = 5 };
+                    int amountOfSeats;
+                    if(randomAuditorium == 1)
+                    {
+                        amountOfSeats = 50;
+                    } else
+                    {
+                        amountOfSeats = 100;
+                    }
+                    Movie movie = _db.Movies.Where(m => m.Id == showing.MovieId).FirstOrDefault();
+                    int duration = movie.Duration;
+                    DateTime endTime = showing.StartTime.AddMinutes(duration);
+                    showing.EndTime = endTime;
+                    List<Seat> seats = new List<Seat>();
+                    string letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
+                    for (int x = 0; x < amountOfSeats / 10; x++)
+                    {
+                        for (int y = 0; y < 10; y++)
+                        {
+                            seats.Add(new Seat { Booked = false, Row = letters[x].ToString(), Number = y });
+                        }
+                    }
+                    if ((movie.RelaseDate - DateTime.Now).TotalDays < 30)
+                    {
+                        showing.Price += _db.Prices.Where(p => p.Name == "NewMovie").FirstOrDefault().Amount;
+                    }
+                    if (showing.StartTime.Hour > 10 && showing.StartTime.Hour < 19)
+                    {
+                        showing.Price += _db.Prices.Where(p => p.Name == "DayShow").FirstOrDefault().Amount;
+                    }
+                    if (showing.StartTime.Hour > 18 && showing.StartTime.Hour <= 23)
+                    {
+                        showing.Price += _db.Prices.Where(p => p.Name == "EveningShow").FirstOrDefault().Amount;
+                    }
+                    showing.Seats = seats;
+                    _db.Showings.Add(showing);
+                }   
+            }
+            _db.SaveChanges();
+        }
+
         //Method to fetch movies and images from the movie db API
         public void FetchUpcomingMoviesFromApi(int amountOfPagesToFetch)
         {

@@ -1,0 +1,17 @@
+﻿@model IEnumerable<BerrasBio1._0.Models.Price>
+
+<div class="price-list">
+  <div class="flex">
+    <h4 class="mr-5">Base ticket price: </h4><h3>@ViewBag.BasePrice $</h3>
+  </div>
+  <div class="flex">
+    <h4 class="mr-5">Addon fee for a new movie (newer than 30 days): </h4><h3>@ViewBag.NewMovie $</h3>
+  </div>
+  <div class="flex">
+    <h4 class="mr-5">Addon fee for a daytime show: </h4><h3>@ViewBag.DayShow $</h3>
+  </div>
+  <div class="flex">
+    <h4 class="mr-5">Addon fee for a evening show: </h4><h3>@ViewBag.EveningShow $</h3>
+  </div>
+</div>
+

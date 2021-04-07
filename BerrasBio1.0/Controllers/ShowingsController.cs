@@ -212,6 +212,15 @@ namespace BerrasBio1._0.Controllers
             ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Name");
             return View();
         }
+        public IActionResult PriceList()
+        {
+            List<Price> prices = _context.Prices.ToList();
+            ViewBag.BasePrice = prices.Where(p => p.Name == "BasePrice").FirstOrDefault().Amount;
+            ViewBag.NewMovie = prices.Where(p => p.Name == "NewMovie").FirstOrDefault().Amount;
+            ViewBag.DayShow = prices.Where(p => p.Name == "DayShow").FirstOrDefault().Amount;
+            ViewBag.EveningShow = prices.Where(p => p.Name == "EveningShow").FirstOrDefault().Amount;
+            return View();
+        }
 
         // POST: Showings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -351,24 +360,44 @@ namespace BerrasBio1._0.Controllers
         }
         public IActionResult BuyTicket(int id)
         {
-            //För VG
-            //ViewData["SeatId"] = new SelectList(_context.Seats.Where(s=>s.Booked == false).OrderBy(s => s.Row), "Id", "SeatName");
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var showing = _context.Showings
+                .Include(s=>s.Seats)
+                .Include(s => s.Auditorium)
+                .Include(s => s.Movie)
+                .FirstOrDefault(s => s.Id == id);
+
+            var seats = showing.Seats.OrderBy(s=>s.Row).ThenBy(s=>s.Number).ToList();
+            var model = new BuyTicketVM();
+            model.Seats = seats;
+
+            if (showing == null)
+            {
+                return NotFound();
+            }
+
             ViewBag.ShowingId = id;
-            ViewBag.ShowingPrice = _context.Showings.Where(s => s.Id == id).FirstOrDefault().Price;
-            return View();
+            ViewBag.ShowingPrice = showing.Price;
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BuyTicket([Bind("FirstName,LastName,Email,ShowingId, AmountOfTickets")] BuyTicketVM buyTicketVM)
+        public async Task<IActionResult> BuyTicket([Bind("FirstName,LastName,Email,ShowingId, AmountOfTickets, SelectedSeats")] BuyTicketVM buyTicketVM)
         {
             if (ModelState.IsValid)
             {
                 List<Ticket> tickets = new List<Ticket>();
                 List<Seat> freeSeats = _context.Seats.Where(s => s.ShowingId == buyTicketVM.ShowingId && s.Booked == false).ToList();
+                var selectedSeats = buyTicketVM.SelectedSeats.Split(',').Select(Int32.Parse).ToList();
+
                 for (int i = 0; i < buyTicketVM.AmountOfTickets; i++)
                 {
-                    Seat freeSeat = freeSeats[i];
-                    Ticket ticket = new Ticket { ShowingId = buyTicketVM.ShowingId, SeatId = freeSeat.Id, Price = _context.Showings.Where(s=>s.Id == buyTicketVM.ShowingId).FirstOrDefault().Price };
+                    var freeSeat = _context.Seats.Find(selectedSeats[i]);
+                    Ticket ticket = new Ticket { ShowingId = buyTicketVM.ShowingId, SeatId = selectedSeats[i], Price = _context.Showings.Where(s=>s.Id == buyTicketVM.ShowingId).FirstOrDefault().Price };
                     tickets.Add(ticket);
                     freeSeat.Booked = true;
                 }
@@ -386,11 +415,8 @@ namespace BerrasBio1._0.Controllers
                     } else
                     {
                         customer.Tickets = tickets;
-                    }
-                    
-                    
-                }
-                
+                    }   
+                }    
                 _context.SaveChanges();
                 return RedirectToAction("TicketConfirmation", "Tickets", new { id = customer.Id });
                 
