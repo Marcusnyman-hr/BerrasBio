@@ -67,8 +67,9 @@ header {
   z-index: 100;
 }
 .svg-logo {
-  width: 200px;
-  height: 100px;
+  display: none;
+  height: 46px;
+  margin-right: 10px;
 }
 .navigation-toggle-container {
   margin-right: 20px;
@@ -87,10 +88,11 @@ header .logo-container {
   align-items: center;
   padding: 20px;
 }
-  header .logo-text {
-    font-size: 28px;
-    color: white;
-  }
+header .logo-text {
+  font-size: 28px;
+  color: white;
+  font-family: 'Train One', cursive;
+}
   
 /*.navigation {
   position: fixed;
