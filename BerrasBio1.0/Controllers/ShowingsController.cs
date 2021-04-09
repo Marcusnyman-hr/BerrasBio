@@ -21,7 +21,7 @@ namespace BerrasBio1._0.Controllers
         }
 
         // GET: Showings
-        public async Task<IActionResult> Index(string sortOrder)
+        public IActionResult Index(string sortOrder)
         {
             //Sortingorders depending on what string gets sent to the action
             ViewBag.StartTime = String.IsNullOrEmpty(sortOrder) ? "StartTime" : "";
@@ -92,7 +92,7 @@ namespace BerrasBio1._0.Controllers
             return View(showing);
         }
         //Get showings for a particular movie based on the ID
-        public async Task<IActionResult> Movie(int? id, string sortOrder)
+        public IActionResult Movie(int? id, string sortOrder)
         {
             if (id == null)
             {
