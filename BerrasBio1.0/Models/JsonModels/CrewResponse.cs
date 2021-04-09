@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BerrasBio1._0.Models.JsonModels
 {
+    //Model to handle the api-calls for cast and crew from the movie database-api
     public class CrewResponse
     {
         [JsonProperty(PropertyName = "cast")]

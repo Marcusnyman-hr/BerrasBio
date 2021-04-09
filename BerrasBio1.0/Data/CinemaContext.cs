@@ -16,7 +16,6 @@ namespace BerrasBio1._0.Data
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Director> Directors { get; set; }
         public DbSet<Writer> Writers { get; set; }
-
         public DbSet<Auditorium> Auditoriums { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Showing> Showings { get; set; }

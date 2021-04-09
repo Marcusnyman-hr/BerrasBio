@@ -19,20 +19,30 @@ namespace BerrasBio1._0.Services
             _db = db;
         }
 
+        //Function to automatically create showings. Not used in the project itself, but was used to run once to populate the database, 
+        //from which we made an sql-script to use to seed the database if the database does'nt exist.
         public void CreateShowings()
         {
             Random random = new Random();
+            //loop 100 times
             for (int i = 0; i < 100; i++)
             {
+                //loop to create 5 showings per day, first one at 08, then one new every 3rd hour
                 for(int f = 0; f < 15; f =f + 3)
                 {
+                    //add one day per outer loop
                     DateTime now = DateTime.Now.AddDays(i);
+                    //Set the time for the showing
                     DateTime newDate = new DateTime(now.Year, now.Month, now.Day, 08 + f, 00, 00);
+                    //Generate a random movie-id to pick what movie to show
                     var randomMovieId = random.Next(1, 112);
+                    //Generate a random number 1-2 to determine what auditorium to have the showing in.
                     var randomAuditorium = random.Next(1, 3);
 
+                    //Create the new showing
                     Showing showing = new Showing() { StartTime = newDate, MovieId = randomMovieId, AuditoriumId = randomAuditorium, Price = 5 };
                     int amountOfSeats;
+                    //Set the amount of seat for the showing according to what auditorium (Would have been fetched from the db if we had more than 2 auditoriums)
                     if(randomAuditorium == 1)
                     {
                         amountOfSeats = 50;
@@ -40,10 +50,12 @@ namespace BerrasBio1._0.Services
                     {
                         amountOfSeats = 100;
                     }
+                    //Get the movie according to the random movieid set in the showing
                     Movie movie = _db.Movies.Where(m => m.Id == showing.MovieId).FirstOrDefault();
                     int duration = movie.Duration;
                     DateTime endTime = showing.StartTime.AddMinutes(duration);
                     showing.EndTime = endTime;
+                    //Create the seats, assign the rows etc
                     List<Seat> seats = new List<Seat>();
                     string letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
                     for (int x = 0; x < amountOfSeats / 10; x++)
@@ -53,6 +65,8 @@ namespace BerrasBio1._0.Services
                             seats.Add(new Seat { Booked = false, Row = letters[x].ToString(), Number = y });
                         }
                     }
+
+                    //Set the price depending on the releasedate and showing-time.
                     if ((movie.RelaseDate - DateTime.Now).TotalDays < 30)
                     {
                         showing.Price += _db.Prices.Where(p => p.Name == "NewMovie").FirstOrDefault().Amount;
@@ -98,14 +112,16 @@ namespace BerrasBio1._0.Services
                 //string videoUrl = $"https://api.themoviedb.org/3/movie/{movieId}/videos?api_key=abef0eabc96675adf06dad47584787b5";
                 var client = new RestClient(apiUrl);
 
+                //Execute api-calls for movie, video and crew
                 var response = client.Execute<MovieResponse>(new RestRequest($"/{movieId}?api_key={apiKey}"));
                 var crewResponse = client.Execute<CrewResponse>(new RestRequest($"/{movieId}/credits?api_key={apiKey}"));
                 var videoResponse = client.Execute<VideoResponse>(new RestRequest($"/{movieId}/videos?api_key={apiKey}"));
 
+                //Filter the results to only save movies that have posters, backdrops, plot, and runtime provided and check so the movie isnt already in the db
                 Movie existingMovie = _db.Movies.Where(x => x.Name == response.Data.Title).FirstOrDefault();
                 if (response.IsSuccessful && crewResponse.IsSuccessful && response.Data.BackdropPath != null && response.Data.PosterPath != null && response.Data.Overview != null && existingMovie == null && response.Data.Runtime != 0)
                 {
-
+                    //Create writer, producer, director and actors.
                     Writer writer = new Writer();
                     Producer producer = new Producer();
                     Director director = new Director();
@@ -137,6 +153,7 @@ namespace BerrasBio1._0.Services
                         }
                     }
 
+                    //Set the genres for the movie. If the genre dont exist in the database => create it.
                     List<Genre> genreList = new List<Genre>();
                     foreach (var genreInResponse in response.Data.Genres)
                     {
@@ -157,6 +174,7 @@ namespace BerrasBio1._0.Services
                         }
                         actorList.Add(actor);
                     }
+                    //Set the trailer url, only accept videos that are trailers and is hosted on youtube.
                     string trailerUrl = "";
                     if (videoResponse.IsSuccessful)
                     {
@@ -169,6 +187,8 @@ namespace BerrasBio1._0.Services
                             }
                         }
                     }
+
+                    //Create the movie
                     Movie newMovie = new Movie()
                     {
                         Name = response.Data.Title,
@@ -185,6 +205,7 @@ namespace BerrasBio1._0.Services
                     if (producer.Name != null) { newMovie.Producer = producer; };
                     if (director.Name != null) { newMovie.Director = director; };
 
+                    //Download and save the posterimage and the backdrop image.
                     using (WebClient webClient = new WebClient())
                     {
                         string path = Directory.GetCurrentDirectory();
@@ -210,6 +231,8 @@ namespace BerrasBio1._0.Services
             return movieList;
         }
 
+
+        //Function to seed the database if it doesent exist.
         public void SeedFromSqlFile()
         {
             using (_db)

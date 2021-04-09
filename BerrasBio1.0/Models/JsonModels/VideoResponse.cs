@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BerrasBio1._0.Models.JsonModels
 {
+    //Model to handle the api-calls for the video-urls from the movie database
     public class VideoResponse
     {
         [JsonProperty(PropertyName = "results")]

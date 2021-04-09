@@ -93,29 +93,10 @@ header .logo-text {
   color: white;
   font-family: 'Train One', cursive;
 }
-  
-/*.navigation {
-  position: fixed;
-  top: 58px;
-  width: 100%;
-  height: calc(100% - 58px);
-  background-color: rgba(158,4,4,0.4);
-  z-index: 99;
-  display: flex;
-  justify-content: center;
-  align-items: center;*/
-  /*  top: 58px;
-  left: calc(-1 * var(--nav-size));
-  height: calc(100% - 58px);
-  width: 200px;
-  background-color: var(--clr-cinema-red);
-  color: white;
-  padding: 20px;
-  transition: transform .5s;
-  transition: -webkit-transform .5s ease;
-  transition: transform .5s ease;
-  z-index: 99;*/
-/*}*/
+.field-validation-error {
+  margin-left: 10px;
+}
+
 .navigation {
   position: fixed;
   top: -100vh;
@@ -127,17 +108,9 @@ header .logo-text {
   justify-content: center;
   align-items: center;
   opacity: 0;
-  /*  top: 58px;
-  left: calc(-1 * var(--nav-size));
-  height: calc(100% - 58px);
-  width: 200px;
-  background-color: var(--clr-cinema-red);
-  color: white;
-  padding: 20px;*/
   transition: transform .5s, opacity .5s;
   transition: -webkit-transform .5s ease, opacity .5s ease;
   transition: transform .5s ease, opacity .5s ease;
-  /*z-index: 99;*/
 }
 .navigation .nav-list-container {
   height: 40%;
@@ -311,7 +284,7 @@ header .logo-text {
 .printable-ticket {
   position: relative;
   width: 640px;
-  height: 300px;
+  height: 250px;
   margin-bottom: 10px;
 }
 .printable-ticket-information {
@@ -334,14 +307,10 @@ header .logo-text {
 .printable-ticket-bg-container {
   position: absolute;
   width: 640px;
-  height: 300px;
+  height: 250px;
   overflow: hidden;
   z-index: -1;
 }
-/*  .printable-ticket-bg:nth-child(even) {
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-  }*/
 
 .printable-ticket-bg {
   width: 640px;
@@ -550,4 +519,10 @@ header .logo-text {
 }
 .mr-5 {
   margin-right: 5px;
+}
+
+.buy-ticket-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

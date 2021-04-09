@@ -22,6 +22,7 @@ namespace BerrasBio1._0
             {
                 CinemaContext dbContext = scope.ServiceProvider.GetService<CinemaContext>();
                 IMovieService movieService = scope.ServiceProvider.GetService<IMovieService>();
+                //If database doesent exist, run the seeder from movieservice
                 bool DatabaseDoesNotExist = dbContext.Database.EnsureCreated();
                 if (DatabaseDoesNotExist)
                 {

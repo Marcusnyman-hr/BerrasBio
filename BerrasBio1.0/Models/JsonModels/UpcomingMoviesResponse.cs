@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BerrasBio1._0.Models.JsonModels
 {
+    //Model to handle the api-calls to get the ids of upcoming movies from the movie database-api
     public class UpcomingMoviesResponse
     {
         [JsonProperty(PropertyName = "results")]

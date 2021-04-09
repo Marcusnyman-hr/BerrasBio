@@ -10,6 +10,9 @@ using BerrasBio1._0.Models;
 
 namespace BerrasBio1._0.Controllers
 {
+
+    //This controller is not used in our project, but we left it for us to be able to edit, delete and play around with our auditoriums easier.
+    //Everything in here would be protected in a real-life-project.
     public class AuditoriumsController : Controller
     {
         private readonly CinemaContext _context;

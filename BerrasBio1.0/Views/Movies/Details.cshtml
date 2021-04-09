@@ -3,7 +3,7 @@
   ViewData["Title"] = "Details";
 }
 
-
+@*Show details about a selected movie*@
 <div class="movie-details">
 
   <div class="flex-column">
@@ -63,17 +63,13 @@
       <div class="movie-details-inner  display-none" id="movie-details-inner-trailer">
         <iframe width="640" height="480" src="@Model.TrailerUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-
-
   </div>
-
-
 <div class="movie-details-bg-container"><img src="~/assets/img/backdrops/@Model.BackdropUrl" class="movie-details-bg" /></div>
 
 
 <script>
+  //Javascript to handle the navigationbar to switch between trailer and info tab
   let movieDetailsNav = document.getElementById("movie-details-nav-list");
-
   let aboutSection = document.getElementById("movie-details-inner-about");
   let trailerSection = document.getElementById("movie-details-inner-trailer");
 

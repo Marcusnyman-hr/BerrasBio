@@ -4,6 +4,10 @@
     ViewData["Title"] = "BuyTicket";
 }
 <div class="buy-ticket">
+  <div class="buy-ticket-heading">
+  <h1>@ViewBag.MovieTitle</h1>
+  <h2>@ViewBag.MovieDate</h2>
+  </div>
   <div class="buy-ticket-form">
     <form asp-action="BuyTicket" name="buyTicket" id="buy-ticket-form">
       <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -29,8 +33,8 @@
         <input type="hidden" asp-for="SelectedSeats" class="form-control" id="selectedSeats" />
           <span asp-validation-for="AmountOfTickets" class="text-danger"></span>
       </div>
+      @*Creates the seatpicker, which consits of x amount of divs to make up the seatpicker, rows and seats.*@
       <div class="seat-picker">
-
         @for (int i = 0; i < Model.Seats.Count / 10; i++)
         {
           <div class="seat-row">
@@ -74,6 +78,7 @@
         <h4>Your order total is: </h4><h3 id="order-total"></h3>
       </div>
       <div class="flex-center">
+        @*Uses javascript to submit the form, to be able to do some frontend validation etc*@
         <a href="javascript:{}" onclick="submitForm()" class="btn-primary">submit</a>
       </div>
 
@@ -85,8 +90,12 @@
   </div>
   </div>
 
+<div class="movie-details-bg-container"><img src="~/assets/img/backdrops/@ViewBag.MovieBackdrop" class="movie-details-bg" /></div>
+
 <script>
+  //Get the price for the showing from viewbag
   let ticketPrice = parseInt('@ViewBag.ShowingPrice', 10);
+  //Select the input elements
   let amountOfTicketsInput = document.getElementById("amountOfTickets");
   let orderTotal = document.getElementById("order-total");
 
@@ -95,6 +104,7 @@
   let selectedSeatsInput = document.getElementById("selectedSeats");
 
   let selectedSeats = [];
+  //Function that runs onload to keep the already selected seats selected if backend validation fails
     window.onload = function () {
     let selectedSeats = '@Model.SelectedSeats';
       if (selectedSeats) {
@@ -109,6 +119,7 @@
       console.log("selected seats dont exist")
     }
   };
+  //Function to select the seat that is clicked.
   let selectSeat = function () {
     let id = this.id
     let isAlreadySelected = selectedSeats.indexOf(id);

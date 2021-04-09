@@ -3,6 +3,8 @@
 @{
   ViewData["Title"] = "Index";
 }
+
+@*The main moviepage, with one large carousel to showcase 6 movies*@
 <div class="movie-index">
   <div class="main-carousel">
     @foreach (var item in Model.Take(6))
@@ -14,6 +16,7 @@
     </div>
     }
   </div>
+  @*And then a couple of smaller carousels based on their genre*@
   <div class="sub-carousels-container">
     <h2 class="sub-carousel-heading">Crime</h2>
     <div class="sub-carousel">

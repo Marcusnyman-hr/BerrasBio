@@ -29,6 +29,7 @@ namespace BerrasBio1._0
             services.AddDbContext<CinemaContext>
                 (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
+            //movieservice ass a Transient service
             services.AddTransient<IMovieService, MovieService>();
         }
 

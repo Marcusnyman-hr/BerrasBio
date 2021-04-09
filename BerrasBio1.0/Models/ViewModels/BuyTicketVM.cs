@@ -11,12 +11,15 @@ namespace BerrasBio1._0.Models.ViewModels
         public int Id { get; set; }
         [Required]
         [StringLength(30)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
         [StringLength(50)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
         [EmailAddress]
+        [Display(Name = "Email")]
         public string Email { get; set; }
         [Required]
         public int ShowingId { get; set; }
